@@ -14,6 +14,7 @@ import connectDB from "./db/connectDB.js";
 
 dotenv.config();
 const app = express();
+console.log("ENV VARS:", process.env);
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
