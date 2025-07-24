@@ -9,12 +9,13 @@ import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import postRoutes from "./routes/post.route.js";
 import notificationRoutes from "./routes/notification.route.js";
+import { pathToRegexp } from "path-to-regexp";
 
 import connectDB from "./db/connectDB.js";
 
 dotenv.config();
 const app = express();
-console.log("ENV VARS:", process.env);
+// console.log("ENV VARS:", process.env);
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -54,6 +55,17 @@ if (process.env.NODE_ENV === "production") {
 	app.get("*", (req, res) => {
 		res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
 	});
+}
+
+try {
+  app._router.stack.forEach((layer) => {
+    if (layer.route && layer.route.path) {
+      console.log("Checking route:", layer.route.path);
+      pathToRegexp(layer.route.path);  // Will throw if malformed
+    }
+  });
+} catch (err) {
+  console.error("❌ Crashed route:", err.message);
 }
 
 
