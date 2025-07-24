@@ -24,7 +24,8 @@ const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
 app.use(cors({
-	origin : "http://localhost:3000",
+	// origin : "http://localhost:3000",
+	origin : "https://x-clone-1-f7zi.onrender.com",
 	credentials : true
 }))
 
