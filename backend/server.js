@@ -15,16 +15,16 @@ import connectDB from "./db/connectDB.js";
 
 dotenv.config();
 const app = express();
-try {
-  app._router.stack.forEach((layer) => {
-    if (layer.route && layer.route.path) {
-      console.log("Checking route:", layer.route.path);
-      pathToRegexp(layer.route.path);  // Will throw if malformed
-    }
-  });
-} catch (err) {
-  console.error("❌ Crashed route:", err.message);
-}
+// try {
+//   app._router.stack.forEach((layer) => {
+//     if (layer.route && layer.route.path) {
+//       console.log("Checking route:", layer.route.path);
+//       pathToRegexp(layer.route.path);  // Will throw if malformed
+//     }
+//   });
+// } catch (err) {
+//   console.error("❌ Crashed route:", err.message);
+// }
 
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -53,27 +53,31 @@ app.use(cookieParser());
 app.use(express.json({ limit: "5mb" })); // to parse req.body
 // limit shouldn't be too high to prevent DOS
 
-console.log("Registering auth routes");
+// console.log("Registering auth routes");
 app.use("/api/auth", authRoutes);
 
-console.log("Registering user routes");
+// console.log("Registering user routes");
 app.use("/api/users", userRoutes);
 
-console.log("Registering post routes");
+// console.log("Registering post routes");
 app.use("/api/posts", postRoutes);
 
-console.log("Registering notification routes");
+// console.log("Registering notification routes");
 app.use("/api/notifications", notificationRoutes);
 
 
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname, "/frontend/build")));
-
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-	});
+	
+	try {
+		app.get("/*", (req, res) => {
+			res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
+		});
+		console.log("Registered wildcard route ✅");
+	} catch (err) {
+		console.error("❌ Failed to register wildcard route:", err);
+	}
 }
-
 
 app.listen(PORT, () => {
     console.log(`${PORT} Server is Running...`);
