@@ -1,4 +1,4 @@
-# Build and Deploy a Twitter Clone
+# X (Twitter) - Clone
 
 Some Features:
 
